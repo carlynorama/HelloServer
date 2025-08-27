@@ -26,7 +26,7 @@ struct Hello: AsyncParsableCommand {
         let app = buildApplication(
             configuration: .init(
                 address: .hostname(hostname, port: port),
-                serverName: "Hummingbird"
+                serverName: "HelloServer"
             )
         )
         try await app.runService()

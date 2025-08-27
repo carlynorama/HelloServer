@@ -21,10 +21,10 @@ let package = Package(
     platforms: [.macOS(.v14)],
     dependencies: [
         .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.1.0"),
-        // Why is this here??
+        // This was here from when the example was just a main.swift?
         // .package(path: "../.."),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
-        // .package(url: "https://github.com/apple/swift-container-plugin", from: "1.0.0"),
+        .package(url: "https://github.com/apple/swift-container-plugin", from: "1.0.0"),
     ],
     targets: [
         .executableTarget(
