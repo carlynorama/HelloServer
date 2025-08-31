@@ -18,11 +18,19 @@ import Logging
 
 let myos = ProcessInfo.processInfo.operatingSystemVersionString
 
+func crashMe() -> String {
+    preconditionFailure("Whoops")
+}
+
 func buildApplication(configuration: ApplicationConfiguration) -> some ApplicationProtocol {
     let router = Router()
     router.addMiddleware { LogRequestsMiddleware(.info) }
     router.get("/") { _, _ in
-        "Hello World, from Hummingbird on \(myos)\n"
+        MessageHTML("Hello World, from Hummingbird on \(myos)\n")
+        //MessageHTML("Hello World, from Hummingbird!")
+    }
+    router.get("/crashme") {  _, _ in
+        crashMe()
     }
 
     let app = Application(

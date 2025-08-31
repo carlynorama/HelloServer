@@ -24,7 +24,7 @@ let package = Package(
         // This was here from when the example was just a main.swift?
         // .package(path: "../.."),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
-        .package(url: "https://github.com/apple/swift-container-plugin", from: "1.0.0"),
+        //.package(url: "https://github.com/apple/swift-container-plugin", from: "1.0.0"),
     ],
     targets: [
         .executableTarget(
@@ -32,7 +32,10 @@ let package = Package(
             dependencies: [
                 .product(name: "Hummingbird", package: "hummingbird"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            ]
+            ],
+            linkerSettings: [
+				.unsafeFlags(["-Xlinker", "-s"], .when(configuration: .release)), // STRIP_STYLE = all
+			]
         )
     ]
 )

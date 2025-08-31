@@ -1,2 +1,5 @@
 .DS_Store
 .build
+.vscode
+binary/
+hello-world_*
