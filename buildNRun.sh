@@ -11,4 +11,4 @@ cp .build/x86_64-swift-linux-musl/$CONFIGURATION/hello-world HelloWrapper/binary
 
 podman build -f HelloWrapper/Containerfile -t wrapped-hello HelloWrapper/
 # no -d because want to see errors inline
-podman run -p 1234:8080 wrapped-hello
+podman run --rm --rmi -p 1234:8080 wrapped-hello
