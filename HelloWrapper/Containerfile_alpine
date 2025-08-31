@@ -1,0 +1,36 @@
+FROM alpine
+
+# Create a hummingbird user and group with /app as its home directory
+# RUN useradd --user-group --create-home --system --skel /dev/null --home-dir /app hummingbird
+# Create a group and user
+# https://stackoverflow.com/questions/49955097/how-do-i-add-a-user-when-im-using-alpine-as-a-base-image
+RUN addgroup \
+    -S \
+    hbGroup \
+&& adduser \
+    -S \
+    hbUser \
+    -h /app/ \
+    -k /dev/null \
+    -G hbGroup
+
+# Switch to the new home directory
+WORKDIR /app
+
+# The binary contains the compiled app and swift-backtrace tool (name changed 
+# from swift-backtrace-static) moved by the build script.
+COPY --chown=hbUser:hbGroup ./binary/ /app/
+
+# Provide configuration needed by the built-in crash reporter and some sensible default behaviors.
+# ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no
+ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace
+
+# Ensure all further commands run as the hummingbird user
+USER hbUser:hbGroup
+
+# Let Docker bind to port 8080
+EXPOSE 8080
+
+# Start the Hummingbird service when the image is run, default to listening on 8080 in production environment
+ENTRYPOINT ["./hello-world"]
+CMD ["--hostname", "0.0.0.0", "--port", "8080"]
