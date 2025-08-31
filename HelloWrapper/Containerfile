@@ -26,7 +26,9 @@ WORKDIR /app
 
 COPY --chown=hbUser:hbGroup ./binary/ /app/
 
-COPY --from=build --chown=hbUser:hbGroup /staging /app/
+# Also tried this way. 
+# COPY --from=build --chown=hbUser:hbGroup /staging/swift-backtrace-static /app/swift-backtrace
+COPY --from=build --chown=hbUser:hbGroup /staging/ /app/
 
 # Provide configuration needed by the built-in crash reporter and some sensible default behaviors.
 # ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no
