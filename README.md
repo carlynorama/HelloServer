@@ -2,6 +2,29 @@
 
 https://doineedkubernetes.com 
 
+
+UNDER CONSTRUCTION. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Resources
 ### Overviews
 
