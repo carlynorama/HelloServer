@@ -1,3 +1,10 @@
+FROM swift:6.1.2-slim AS build
+
+WORKDIR /staging
+
+# Copy static swift backtrace binary to the staging area.
+RUN cp "/usr/libexec/swift/linux/swift-backtrace-static" ./
+
 FROM alpine
 
 # Create a hummingbird user and group with /app as its home directory
@@ -17,13 +24,15 @@ RUN addgroup \
 # Switch to the new home directory
 WORKDIR /app
 
-# The binary contains the compiled app and swift-backtrace tool (name changed 
-# from swift-backtrace-static) moved by the build script.
 COPY --chown=hbUser:hbGroup ./binary/ /app/
+
+# Also tried this way. 
+# COPY --from=build --chown=hbUser:hbGroup /staging/swift-backtrace-static /app/swift-backtrace
+COPY --from=build --chown=hbUser:hbGroup /staging/ /app/
 
 # Provide configuration needed by the built-in crash reporter and some sensible default behaviors.
 # ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no
-ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace
+ENV SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no,swift-backtrace=./swift-backtrace-static
 
 # Ensure all further commands run as the hummingbird user
 USER hbUser:hbGroup
