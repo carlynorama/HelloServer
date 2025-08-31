@@ -16,20 +16,39 @@ import Foundation
 import Hummingbird
 import Logging
 
+typealias AppRequestContext = ChannelRequestContext
 let myos = ProcessInfo.processInfo.operatingSystemVersionString
 
+// func crashMe() -> String {
+//     preconditionFailure("Whoops")
+// }
+
 func buildApplication(configuration: ApplicationConfiguration) -> some ApplicationProtocol {
-    let router = Router()
-    router.addMiddleware { LogRequestsMiddleware(.info) }
-    router.get("/") { _, _ in
-        "Hello World, from Hummingbird on \(myos)\n"
-    }
+    
+    let router = buildRouter()
 
     let app = Application(
         router: router,
         configuration: configuration,
-        logger: Logger(label: "HelloWorldHummingbird")
+        logger: Logger(label: "HelloServer")
     )
 
     return app
+}
+
+
+func buildRouter() -> Router<AppRequestContext> {
+    let router = Router(context: AppRequestContext.self) 
+    router.addMiddleware { LogRequestsMiddleware(.info) }
+    router.get("/") { _, context in
+        guard let ip = context.remoteAddress else { throw HTTPError(.badRequest) }
+        return MessageHTML("Hello \(ip), from Hummingbird on \(myos)\n")
+    }
+    // router.get("/crashme") {  _, _ in
+    //     crashMe()
+    // }
+
+
+    return router
+
 }
